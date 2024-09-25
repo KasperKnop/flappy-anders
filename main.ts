@@ -4,9 +4,13 @@ enum ActionKind {
     Jumping
 }
 namespace SpriteKind {
-    export const Gap = SpriteKind.create()
+    export const scoreCollider = SpriteKind.create()
     export const obstacle = SpriteKind.create()
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.scoreCollider, function (sprite, otherSprite) {
+    info.changeScoreBy(1)
+    sprites.destroy(otherSprite)
+})
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
     anders.vy = -100
     animation.runImageAnimation(
@@ -17,21 +21,16 @@ controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
     )
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    if (otherSprite.image.equals(scoreCollider)) {
-        info.changeScoreBy(1)
-        sprites.destroy(otherSprite)
-    } else {
-        game.over(false)
-    }
+    game.over(false)
 })
 sprites.onDestroyed(SpriteKind.Player, function (sprite) {
     game.over(false)
 })
+let scoreCollider: Image = null
 let projectile: Sprite = null
 let bottomImage: Image = null
 let topImage: Image = null
 let randomObstacleIndex = 0
-let scoreCollider: Image = null
 let anders: Sprite = null
 scene.setBackgroundImage(assets.image`background`)
 info.setScore(0)
@@ -61,4 +60,5 @@ game.onUpdateInterval(1500, function () {
     projectile = sprites.createProjectileFromSide(scoreCollider, -45, 0)
     projectile.bottom = scene.screenHeight()
     projectile.setFlag(SpriteFlag.Invisible, true)
+    projectile.setKind(SpriteKind.scoreCollider)
 })
