@@ -37,6 +37,7 @@ info.setScore(0)
 anders = sprites.create(assets.image`anders`, SpriteKind.Player)
 anders.ay = 300
 anders.setFlag(SpriteFlag.AutoDestroy, true)
+game.setGameOverPlayable(false, music.melodyPlayable(music.smallCrash), false)
 game.onUpdateInterval(1500, function () {
     randomObstacleIndex = randint(0, 3)
     if (randomObstacleIndex == 0) {
